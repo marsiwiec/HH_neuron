@@ -107,10 +107,10 @@ def _():
             h[i] = h[i - 1] + dt * (alphah(V[i - 1]) * (1 - h[i - 1]) - betah(V[i - 1]) * h[i - 1])
             n[i] = n[i - 1] + dt * (alphan(V[i - 1]) * (1 - n[i - 1]) - betan(V[i - 1]) * n[i - 1])
 
-        return timeWave, V, m, h, n, gE, gI, Isyn, sineWave
+        return timeWave, V, m, h, n, gE, gI, Isyn
 
 
-    time, V, m, h, n, gE, gI, Isyn, sineWave = integrate_hh_ou()
+    time, V, m, h, n, gE, gI, Isyn = integrate_hh_ou()
 
     fig, axs = plt.subplots(4, 1)
 
