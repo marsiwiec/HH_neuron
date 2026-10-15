@@ -1,0 +1,132 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.25.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "6d56a8fa79e176c154fe45cd506f0097",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"hodgkinhuxley-neuron-with-stochastic-synaptic-input\">\ud83e\udde0 Hodgkin\u2013Huxley neuron with stochastic synaptic input</h1>\n<span class=\"paragraph\">A single-compartment <a href=\"https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model\" rel=\"noopener noreferrer\" target=\"_blank\">Hodgkin\u2013Huxley (HH) model</a> neuron driven by noisy excitatory and inhibitory synaptic input. Its synaptic conductances are <a href=\"https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process\" rel=\"noopener noreferrer\" target=\"_blank\">Ornstein\u2013Uhlenbeck (OU) processes</a>, stepped with the <a href=\"https://en.wikipedia.org/wiki/Euler%E2%80%93Maruyama_method\" rel=\"noopener noreferrer\" target=\"_blank\">Euler\u2013Maruyama scheme</a>.</span>\n<h4 id=\"how-to-use\">How to use</h4>\n<ul>\n<li><strong>Controls</strong> (left): every change recomputes the plots and stats live.</li>\n<li><strong>Random</strong>: draw a fresh noise realization at the current settings.</li>\n<li><strong>Seed</strong>: fix the noise for a reproducible run; the active seed is shown under the button.</li>\n</ul>\n<hr />\n<h3 id=\"model-specification\">Model specification</h3>\n<span class=\"paragraph\"><strong>Membrane potential</strong> \u2014 <marimo-tex class=\"arithmatex\">||(C_m||)</marimo-tex> is the membrane <a href=\"https://en.wikipedia.org/wiki/Capacitance\" rel=\"noopener noreferrer\" target=\"_blank\">capacitance</a>; each <marimo-tex class=\"arithmatex\">||(E||)</marimo-tex> is a <a href=\"https://en.wikipedia.org/wiki/Reversal_potential\" rel=\"noopener noreferrer\" target=\"_blank\">reversal potential</a>.</span>\n<marimo-tex class=\"arithmatex\">||[ C_m \\frac{dV}{dt} = I_{ext} - I_{Na} - I_K - I_L - I_{syn} ||]</marimo-tex><span class=\"paragraph\"><strong>Ionic currents</strong>, with <a href=\"https://en.wikipedia.org/wiki/Voltage-gated_ion_channel\" rel=\"noopener noreferrer\" target=\"_blank\">gating variables</a> <marimo-tex class=\"arithmatex\">||(m, h, n||)</marimo-tex>.</span>\n<marimo-tex class=\"arithmatex\">||[ I_{Na} = \\bar g_{Na}\\, m^3 h\\,(V - E_{Na}), \\qquad I_K = \\bar g_K\\, n^4\\,(V - E_K), \\qquad I_L = g_L\\,(V - E_L) ||]</marimo-tex><span class=\"paragraph\"><strong>Synaptic current</strong>, where <marimo-tex class=\"arithmatex\">||(g_E, g_I||)</marimo-tex> are the excitatory and inhibitory <a href=\"https://en.wikipedia.org/wiki/Electrical_resistance_and_conductance\" rel=\"noopener noreferrer\" target=\"_blank\">conductances</a>.</span>\n<marimo-tex class=\"arithmatex\">||[ I_{syn} = g_E(t)\\,(V - E_E) + g_I(t)\\,(V - E_I) ||]</marimo-tex><span class=\"paragraph\"><strong>Gating kinetics</strong> \u2014 <marimo-tex class=\"arithmatex\">||(m, h, n||)</marimo-tex> follow <a href=\"https://en.wikipedia.org/wiki/Rate_equation\" rel=\"noopener noreferrer\" target=\"_blank\">first-order kinetics</a>.</span>\n<marimo-tex class=\"arithmatex\">||[ \\frac{dm}{dt} = \\alpha_m(V)(1 - m) - \\beta_m(V)\\,m, \\qquad \\frac{dh}{dt} = \\alpha_h(V)(1 - h) - \\beta_h(V)\\,h, \\qquad \\frac{dn}{dt} = \\alpha_n(V)(1 - n) - \\beta_n(V)\\,n ||]</marimo-tex><span class=\"paragraph\"><strong>Synaptic conductances</strong> \u2014 independent <a href=\"https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process\" rel=\"noopener noreferrer\" target=\"_blank\">OU processes</a> driven by <a href=\"https://en.wikipedia.org/wiki/White_noise\" rel=\"noopener noreferrer\" target=\"_blank\">white noise</a> <marimo-tex class=\"arithmatex\">||(\\xi(t)||)</marimo-tex>.</span>\n<marimo-tex class=\"arithmatex\">||[ \\tau_E \\frac{dg_E}{dt} = (\\bar g_E - g_E) + \\sigma_E\\,\\xi_E(t), \\qquad \\tau_I \\frac{dg_I}{dt} = (\\bar g_I - g_I) + \\sigma_I\\,\\xi_I(t) ||]</marimo-tex><span class=\"paragraph\"><strong>Integration</strong> \u2014 this <a href=\"https://en.wikipedia.org/wiki/Stochastic_differential_equation\" rel=\"noopener noreferrer\" target=\"_blank\">stochastic differential equation</a> is stepped with the <a href=\"https://en.wikipedia.org/wiki/Euler%E2%80%93Maruyama_method\" rel=\"noopener noreferrer\" target=\"_blank\">Euler\u2013Maruyama method</a> (stationary variance <marimo-tex class=\"arithmatex\">||(\\sigma^2 \\tau / 2||)</marimo-tex>).</span>\n<marimo-tex class=\"arithmatex\">||[ g(t + \\Delta t) = g(t) + \\frac{\\Delta t}{\\tau}\\big(\\bar g - g(t)\\big) + \\sigma \\sqrt{\\Delta t}\\,\\mathcal{N}(0, 1) ||]</marimo-tex></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "ef0032c4370d821ec8e83d0954968f66",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='MJUe-0' random-id='1c6a764b-6013-6cec-416b-d2c808355400'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;ea79e5d77291448daf77773bc3faccc5&quot;}' data-label='null' data-model-id='&quot;ea79e5d77291448daf77773bc3faccc5&quot;'></marimo-anywidget></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "0686af37b4731b1927dee30a7d7fac83",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "00a4de3fabf1b28216d833848a215de9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "1d726774b62ba0764e3833681115bc23",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "59b0a2de4d0260bdb8a1c07d520dffc9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "b1fcb97d99511cac1751fc79fecc56f2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "5b191ca71149911806b2411d8c139c66",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "53c91ac4cf520c1394173a168a6d1cd1",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "1811dee2f1a306ad760e881a25def4ef",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h3 id=\"things-to-try\">\ud83d\udd2c Things to try</h3>\n<ul>\n<li><strong>Draw new noise realizations.</strong> Keep every parameter fixed and press\n  <strong>Random</strong> several times. How much does the spike count change?\n  That spread is trial-to-trial variability caused purely by synaptic noise.</li>\n<li><strong>Push the neuron across threshold.</strong> Raise <strong>Iext</strong> slowly from 0. At some\n  value the firing switches from sporadic, noise-driven spikes to regular tonic\n  firing \u2014 find that transition. Then set <code>sigmaE = sigmaI = 0</code> to see the\n  sharp, deterministic onset.</li>\n<li><strong>Balance excitation and inhibition.</strong> Increase <strong>gE</strong> and <strong>gI</strong> together.\n  Strong E and I can cancel on average while greatly increasing the\n  <em>fluctuations</em>: watch the membrane potential get more jagged even though its\n  mean barely moves.</li>\n<li><strong>Change the input timescales.</strong> <code>tauE</code> and <code>tauI</code> set how long synaptic\n  conductance excursions last: small <code>tau</code> gives fast, uncorrelated noise;\n  large <code>tau</code> gives slow drifts. See how this reshapes the membrane trace.</li>\n<li><strong>Break the channels.</strong> Set <strong>gNa = 0</strong> (no spikes) or <strong>gK = 0</strong> (no\n  repolarisation) and describe what happens \u2014 the classic ablation experiments\n  from the original Hodgkin\u2013Huxley work.</li>\n</ul>\n<blockquote>\n<span class=\"paragraph\"><strong>Tip:</strong> the <em>active seed</em> under the button identifies the exact noise\nrealization. Note it down to re-create a trace later.</span>\n</blockquote></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
